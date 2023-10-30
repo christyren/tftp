@@ -39,20 +39,26 @@ type transfer struct {
 
 // send serializes packet and calls transmit function
 func (t *transfer) send(r tftp.Packet) {
+        logger.Printf("Start serializing data for any packet. \n")
         t.sendData, _ = r.MarshalBinary()
+        logger.Printf("Serialized to-be-sent packet data for transfer. Now start transmitting. \n")
         t.transmit()
+        logger.Printf("Packet send completed. \n")
 }
 
 // sendD transmits serialized data
 func (t *transfer) transmit() {
+        logger.Printf("Start transmiting (write data to transfer). \n")
         _, err := t.conn.WriteTo(t.sendData, t.addr)
         if err != nil {
                 logger.Printf("Error: failed sending a packet. %s", err)
                 t.retry = true
         } else {
+                logger.Printf("Write to transfer ok, will not retry. \n")
                 t.retry = false
                 t.lastOp = time.Now()
         }
+        logger.Printf("Transmit ends. \n")
 }
 
 // wrqHandler creates a new inFlight transfer and responds with Ack
@@ -61,6 +67,7 @@ func wrqHandler(conn net.PacketConn, p tftp.Packet, addr net.Addr) {
 
         lock.Lock()
         _, ok := store[pkt.Filename]
+        logger.Printf("Stored file %s in store in server. \n", pkt.Filename)
         lock.Unlock()
         if ok {
                 logger.Printf("%s already exists. Client %v", pkt.Filename, addr)
@@ -77,8 +84,13 @@ func wrqHandler(conn net.PacketConn, p tftp.Packet, addr net.Addr) {
                 conn:     conn,
                 filename: pkt.Filename,
         }
-        res := tftp.PacketAck{BlockNum: 0}
+        // res := tftp.PacketAck{BlockNum: 0}
+        res := tftp.PacketAck{
+                Op:       tftp.OpAck,
+                BlockNum: 0,
+            }
         t.send(&res)
+        logger.Printf("Sent data in write request ends, though does not mean successful. Watch if ack is sent to client\n")
 
         lock.Lock()
         inFlight[t.filename] = t
@@ -115,7 +127,7 @@ func rrqHandler(conn net.PacketConn, p tftp.Packet, addr net.Addr) {
         } else {
                 data = t.data
         }
-        res := tftp.PacketData{Data: data, BlockNum: t.blockNum}
+        res := tftp.PacketData{Op: tftp.OpData, Data: data, BlockNum: t.blockNum}
         t.send(&res)
 
         lock.Lock()
@@ -140,7 +152,7 @@ func dataHandler(conn net.PacketConn, p tftp.Packet, addr net.Addr, n int) {
         // The buffer is reused, so leftovers have to be cut out - (d[:n])
         t.data = append(t.data, d[:n]...)
         t.blockNum++
-        res := tftp.PacketAck{BlockNum: pkt.BlockNum}
+        res := tftp.PacketAck{Op: tftp.OpAck, BlockNum: pkt.BlockNum}
         t.send(&res)
 
         lock.Lock()
@@ -180,7 +192,7 @@ func ackHandler(conn net.PacketConn, p tftp.Packet, addr net.Addr) {
                 data = t.data[rsize:]
         }
 
-        res := tftp.PacketData{BlockNum: t.blockNum, Data: data}
+        res := tftp.PacketData{Op: tftp.OpData, BlockNum: t.blockNum, Data: data}
         t.send(&res)
 
         lock.Lock()
