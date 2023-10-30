@@ -14,7 +14,10 @@ This is a custom tftp server running on port 6969.  You can use a tftp client to
 All following commands are executed in the same directory as main.go, which is "cmd/tftp". Assume you have tftp installed. We will use it as client. I have a Mac so it's already installed.
 
 ### Commands:
-Start server command: `./tftp`
+
+Build: `go build`
+
+Start server: `./tftp`
 
 In another terminal window:
 

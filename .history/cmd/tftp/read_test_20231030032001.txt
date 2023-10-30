@@ -1,9 +1,0 @@
-function tftp_get() {
-  tftp $HOST $PORT << TFTP
-  verb
-  trace
-  binary
-  get $FILE back-$FILE
-TFTP
-}
-
