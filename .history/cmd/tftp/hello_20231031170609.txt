@@ -1,0 +1,58 @@
+UDP?
+
+It depends on what you’re doing online and the type of data being transferred. UDP is better if you’re gaming online, because its speedy data transfer allows for mostly lag-free gaming. TCP is better if you’re transferring files, like family photos, because it ensures the data arrives exactly as it was sent.
+
+Overall, TCP and UDP are both useful protocols, so to think in terms of TCP vs UDP is a bit misleading. But depending on the type of data transfer, TCP or UDP might be better for the job. Here are some examples:
+
+TCP is best for:
+
+    icon-pros-20Email or texting
+
+    icon-pros-20File transfers
+
+    icon-pros-20Web browsing
+
+UDP is best for:
+
+    icon-pros-20Live streaming
+
+    icon-pros-20Online gaming
+
+    icon-pros-20Video chat
+
+Here’s a detailed breakdown of the advantages and disadvantages of TCP and UDP:
+Advantages of TCP
+
+Transmission control protocol (TCP) is the protocol to choose for maximum reliability and quality. It may not be the fastest, but it gets the job done right. Here are a few advantages of the TCP protocol:
+
+    It sets up and maintains a connection between sender and receiver.
+
+    It operates independently of the operating system.
+
+    It supports many routing protocols.
+
+    It checks for errors, guaranteeing data arrives at its destination unaltered.
+
+    It confirms data arrival after delivery, or attempts to retransfer.
+
+    It’s able to send data in a particular sequence.
+
+    It optimizes the pace of data transmission based on the receiver.
+
+Disadvantages of TCP
+
+TCP isn’t suited for some types of data transfers, especially ones that require faster speeds. These are the drawbacks of TCP packet transmission:
+
+    It uses more bandwidth and is slower than UDP.
+
+    It’s especially slow at the beginning of a file transfer.
+
+    It can prevent data from loading if some data is lost. For example, it won’t load images on a web page until all of the page data has been delivered.
+
+    It reduces its transfer rate if the network is congested, resulting in even slower speeds.
+
+    It’s not suited for LAN and PAN networks.
+
+    It can’t multicast or broadcast.
+
+Despite its slower speeds, TCP is the only protocol that can retransmit lost data packets. When reliability is critical, TCP is the best option.
